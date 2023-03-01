@@ -10819,28 +10819,16 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
-body, #app {
-  min-height: 100vh;
+html, body {
+  height: 100%;
   margin: 0;
 }
 
-header {
-  min-height: 50px;
+body {
+  display: flex;
+  flex-flow: column;
 }
 
 footer {
-  min-height: 50px;
-}
-
-#app {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-row {
-  flex-flow: row;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  flex: 1;
+  margin-top: auto;
 }

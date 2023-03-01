@@ -1,41 +1,39 @@
-import React, {Fragment} from 'react';
+import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
-import Header from "./layout/header";
-import Footer from "./layout/footer";
+import UploadDocumentForm from "./UploadDocumentForm";
+import Uploads from "./Uploads";
 
 function App() {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(e.target)
-    const formData = new FormData(e.target);
-    console.log(formData)
-    console.log(formData.get('file'))
-  }
+  const [uploads, setUploads] = useState();
+  useEffect(() => {
+    axios.get('/get-uploads').then(({data}) => {
+      console.log(data);
+      setUploads(data.uploads);
+    }).catch(err => {
+      console.log(err);
+    });
+  }, []);
   return (
-      <>
-        <Header/>
-        <div className="row gx-0 form-row">
-          <div className="col-md-8">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-10">
+            <div className="card my-2">
+              <div className="card-header">
+                Previous uploads
+              </div>
+              <div className="card-body">
+                <Uploads uploads={uploads}/>
+              </div>
+            </div>
             <div className="card">
               <div className="card-header">Form to upload files</div>
               <div className="card-body">
-                <form onSubmit={e => handleSubmit(e)}>
-                  <div className="row">
-                    <div className="col-8">
-                      <label htmlFor='file'>File</label>
-                      <input className='form-control' type="file" name='file'/>
-                    </div>
-                    <div className="col-2 flex-column justify-content-end align-content-center">
-                      <button className='btn btn-block btn-primary'>Upload</button>
-                    </div>
-                  </div>
-                </form>
+                <UploadDocumentForm setUploads={setUploads}/>
               </div>
             </div>
           </div>
         </div>
-        <Footer/>
-      </>
+      </div>
   );
 }
 
