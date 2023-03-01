@@ -1,13 +1,11 @@
 import React, {useState} from 'react';
+import Swal from 'sweetalert2'
 
 function UploadDocumentForm({setUploads}) {
   const [description, setDescription] = useState();
   const [file, setFile] = useState();
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!file) {
-      alert('please select the file')
-    }
     const formData = new FormData();
     formData.append('file', file);
     formData.append('description', description);
@@ -19,9 +17,18 @@ function UploadDocumentForm({setUploads}) {
       const {upload, message} = data;
       if (upload) {
         setUploads(prevState => ([...prevState, upload]));
+        Swal.fire({
+          title: '<h3>Success!</h3>',
+          icon: 'success',
+          text: message
+        });
+      } else {
+        Swal.fire({
+          title: '<h3>Error!</h3>',
+          icon: 'error',
+          text: message
+        });
       }
-      setFile(null);
-      alert(message);
     }).catch(err => {
       console.log(err)
     })

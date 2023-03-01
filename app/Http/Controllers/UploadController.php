@@ -50,7 +50,7 @@ class UploadController extends Controller
       ]);
       return response()->json(['upload' => $newUpload, 'message' => 'File uploaded successfully!']);
     } catch (ValidationException $validationException) {
-      return response()->json(['upload' => false, 'message' => $validationException->getMessage()]);
+      return response()->json(['upload' => false, 'message' => implode(' ', \Illuminate\Support\Arr::flatten($validationException->errors()))]);
     } catch (\Exception $exception) {
       return response()->json(['upload' => false, 'message' => $exception->getMessage()]);
     }
