@@ -1,15 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import ReactDOM from 'react-dom';
+import React, {useEffect, useState} from "react";
+import ReactDOM from "react-dom";
 import UploadDocumentForm from "./UploadDocumentForm";
 import Uploads from "./Uploads";
 
 function App() {
-  const [uploads, setUploads] = useState();
+  const [uploads, setUploads] = useState([]);
   useEffect(() => {
-    axios.get('/get-uploads').then(({data}) => {
-      console.log(data);
-      setUploads(data.uploads);
-    }).catch(err => {
+    axios
+    .get("/get-uploads")
+    .then(({data}) => {
+      setUploads((prevState) => {
+        return data.uploads;
+      });
+    })
+    .catch((err) => {
       console.log(err);
     });
   }, []);
@@ -18,9 +22,7 @@ function App() {
         <div className="row justify-content-center">
           <div className="col-10">
             <div className="card my-2">
-              <div className="card-header">
-                Previous uploads
-              </div>
+              <div className="card-header">Previous uploads</div>
               <div className="card-body">
                 <Uploads uploads={uploads}/>
               </div>
@@ -39,6 +41,6 @@ function App() {
 
 export default App;
 
-if (document.getElementById('app')) {
-  ReactDOM.render(<App/>, document.getElementById('app'));
+if (document.getElementById("app")) {
+  ReactDOM.render(<App/>, document.getElementById("app"));
 }

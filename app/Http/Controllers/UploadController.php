@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Upload;
+use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -33,10 +34,9 @@ class UploadController extends Controller
    */
   public function store(Request $request)
   {
-    // Create a new one
     try {
       $request->validate([
-        'file' => 'required|file|mimes:png',
+        'file' => 'required|file|mimes:png,pdf,jpg,jpeg|max:2000',
         'description' => 'nullable|string'
       ]);
       $uploader = auth()->user();
@@ -49,45 +49,13 @@ class UploadController extends Controller
         'user_id' => $uploader->id
       ]);
       return response()->json(['upload' => $newUpload, 'message' => 'File uploaded successfully!']);
+    } catch (PostTooLargeException $postTooLargeException) {
+      return response()->json(['upload' => false, 'message' => $postTooLargeException->getMessage()]);
     } catch (ValidationException $validationException) {
       return response()->json(['upload' => false, 'message' => implode(' ', \Illuminate\Support\Arr::flatten($validationException->errors()))]);
     } catch (\Exception $exception) {
       return response()->json(['upload' => false, 'message' => $exception->getMessage()]);
     }
-  }
-
-  /**
-   * Display the specified resource.
-   *
-   * @param \App\Models\Upload $upload
-   * @return \Illuminate\Http\Response
-   */
-  public function show(Upload $upload)
-  {
-    // Show single upload
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param \Illuminate\Http\Request $request
-   * @param \App\Models\Upload $upload
-   * @return \Illuminate\Http\Response
-   */
-  public function update(Request $request, Upload $upload)
-  {
-    // Update existing one
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param \App\Models\Upload $upload
-   * @return \Illuminate\Http\Response
-   */
-  public function destroy(Upload $upload)
-  {
-    //
   }
 
   public function storeFileAndCreateLink(int $uploaderId, string $storageFolder, $file): array
