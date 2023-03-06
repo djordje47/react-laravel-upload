@@ -5394,15 +5394,16 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 function App() {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
     uploads = _useState2[0],
     setUploads = _useState2[1];
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    axios.get('/get-uploads').then(function (_ref) {
+    axios.get("/get-uploads").then(function (_ref) {
       var data = _ref.data;
-      console.log(data);
-      setUploads(data.uploads);
+      setUploads(function (prevState) {
+        return data.uploads;
+      });
     })["catch"](function (err) {
       console.log(err);
     });
@@ -5441,8 +5442,8 @@ function App() {
   });
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
-if (document.getElementById('app')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(App, {}), document.getElementById('app'));
+if (document.getElementById("app")) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(App, {}), document.getElementById("app"));
 }
 
 /***/ }),
@@ -5489,11 +5490,11 @@ function UploadDocumentForm(_ref) {
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
     var formData = new FormData();
-    formData.append('file', file);
-    formData.append('description', description);
-    axios.post('/upload-file', formData, {
+    formData.append("file", file);
+    formData.append("description", description);
+    axios.post("/upload-file", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
+        "Content-Type": "multipart/form-data"
       }
     }).then(function (_ref2) {
       var data = _ref2.data;
@@ -5504,14 +5505,14 @@ function UploadDocumentForm(_ref) {
           return [].concat(_toConsumableArray(prevState), [upload]);
         });
         sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire({
-          title: '<h3>Success!</h3>',
-          icon: 'success',
+          title: "<h3>Success!</h3>",
+          icon: "success",
           text: message
         });
       } else {
         sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire({
-          title: '<h3>Error!</h3>',
-          icon: 'error',
+          title: "<h3>Error!</h3>",
+          icon: "error",
           text: message
         });
       }
@@ -5587,15 +5588,15 @@ __webpack_require__.r(__webpack_exports__);
 function Uploads(_ref) {
   var uploads = _ref.uploads;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("ul", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
       className: "list-group",
-      children: uploads && uploads.map(function (upload) {
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("li", {
+      children: uploads.length ? uploads.map(function (upload) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
           className: "list-group-item",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
             className: "row",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-              className: "col-6",
+              className: "col-lg-6 col-md-6 col-sm-12 col-xs-12",
               children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
                 href: upload.path,
                 target: "_blank",
@@ -5605,14 +5606,19 @@ function Uploads(_ref) {
                 children: upload.description
               })]
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-              className: "col-6 text-end",
+              className: "col-lg-6 col-md-6 col-sm-12 col-xs-12 text-lg-end",
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
                 className: "badge bg-primary",
-                children: moment__WEBPACK_IMPORTED_MODULE_1___default()(upload.created_at).format('DD-MM-YYYY, h:mm:ss a')
+                children: moment__WEBPACK_IMPORTED_MODULE_1___default()(upload.created_at).format("DD-MM-YYYY, h:mm:ss a")
               })
             })]
           })
         }, upload.id);
+      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+        className: "alert alert-info",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+          children: "There are no uploaded files."
+        })
       })
     })
   });
