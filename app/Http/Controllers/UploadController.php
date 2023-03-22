@@ -36,7 +36,7 @@ class UploadController extends Controller
   {
     try {
       $request->validate([
-        'file' => 'required|file|mimes:png,pdf,jpg,jpeg|max:2000',
+        'file' => 'required|file|mimes:png,pdf,jpg,jpeg|max:2048',
         'description' => 'nullable|string'
       ]);
       $uploader = auth()->user();
