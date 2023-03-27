@@ -4,11 +4,16 @@ import Swal from "sweetalert2";
 function UploadDocumentForm({setUploads}) {
   const [description, setDescription] = useState();
   const [file, setFile] = useState();
+  const [emails, setEmails] = useState(undefined);
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
     formData.append("description", description);
+    formData.append("emails", emails);
+    if (emails === undefined) {
+      formData.append("emails", null);
+    }
     axios
     .post("/upload-file", formData, {
       headers: {
@@ -55,6 +60,15 @@ function UploadDocumentForm({setUploads}) {
                 name="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+            ></textarea>
+          </div>
+          <div className="col-12">
+            <label htmlFor="description">Emails</label>
+            <textarea
+                className="form-control"
+                name="description"
+                value={emails}
+                onChange={(e) => setEmails(e.target.value)}
             ></textarea>
           </div>
           <div className="col-6 text-center my-2">

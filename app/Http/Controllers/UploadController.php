@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmail;
+use App\Mail\WelcomeEmail;
 use App\Models\Upload;
 use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Http\Request;
@@ -37,17 +39,24 @@ class UploadController extends Controller
     try {
       $request->validate([
         'file' => 'required|file|mimes:png,pdf,jpg,jpeg|max:2048',
+        'emails' => 'nullable|string',
         'description' => 'nullable|string'
       ]);
       $uploader = auth()->user();
       $file = $request->file('file');
       $documentPath = $this->storeFileAndCreateLink($uploader->id, 'uploads', $file);
+      $emailsArr = array_map('trim', explode(',', $request->get('emails')));
       $newUpload = Upload::create([
         'name' => $file->getClientOriginalName(),
         'description' => $request->get('description'),
+        'emails' => $emailsArr,
         'path' => $documentPath['public_path'],
         'user_id' => $uploader->id
       ]);
+      if ($request->get('emails')) {
+        $emailJob = new SendEmail($uploader, $newUpload);
+        $this->dispatch($emailJob);
+      }
       return response()->json(['upload' => $newUpload, 'message' => 'File uploaded successfully!']);
     } catch (PostTooLargeException $postTooLargeException) {
       return response()->json(['upload' => false, 'message' => $postTooLargeException->getMessage()]);

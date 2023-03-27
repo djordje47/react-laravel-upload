@@ -5487,11 +5487,19 @@ function UploadDocumentForm(_ref) {
     _useState4 = _slicedToArray(_useState3, 2),
     file = _useState4[0],
     setFile = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(undefined),
+    _useState6 = _slicedToArray(_useState5, 2),
+    emails = _useState6[0],
+    setEmails = _useState6[1];
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
     var formData = new FormData();
     formData.append("file", file);
     formData.append("description", description);
+    formData.append("emails", emails);
+    if (emails === undefined) {
+      formData.append("emails", null);
+    }
     axios.post("/upload-file", formData, {
       headers: {
         "Content-Type": "multipart/form-data"
@@ -5550,6 +5558,19 @@ function UploadDocumentForm(_ref) {
           value: description,
           onChange: function onChange(e) {
             return setDescription(e.target.value);
+          }
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+        className: "col-12",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("label", {
+          htmlFor: "description",
+          children: "Emails"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("textarea", {
+          className: "form-control",
+          name: "description",
+          value: emails,
+          onChange: function onChange(e) {
+            return setEmails(e.target.value);
           }
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {

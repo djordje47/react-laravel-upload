@@ -13,6 +13,11 @@ class Upload extends Model
     'name',
     'path',
     'description',
-    'user_id'
+    'user_id',
+    'emails'
+  ];
+
+  protected $casts = [
+    'emails' => 'array'
   ];
 }
